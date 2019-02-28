@@ -17,7 +17,7 @@ else
 fi
 
 if [ -z $2 ]; then
-	PLATFORM="3"
+	PLATFORM="rk3399"
 else
 	PLATFORM=$2
 fi
@@ -97,7 +97,8 @@ mount -t ext4 ${IMAGE}2 /media/tmp
 
 # Add rootfs into Image
 cp -rfa $OUTPUT/rootfs/* /media/tmp
-
+# Add wifi firmware
+cp -rfa $ROOT/external/system/ /media/tmp 
 umount /media/tmp
 
 ./Generate_boot_image.sh $VAR

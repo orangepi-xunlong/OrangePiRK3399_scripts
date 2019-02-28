@@ -424,11 +424,11 @@ mkdir -p "$DEST/lib"
 mkdir -p "$DEST/usr"
 
 # Create fstab
-cat <<EOF > "$DEST/etc/fstab"
+#cat <<EOF > "$DEST/etc/fstab"
 # <file system>	<dir>	<type>	<options>			<dump>	<pass>
-/dev/mmcblk1p1	/boot	vfat	defaults			0		2
-/dev/mmcblk1p2	/	ext4	defaults,noatime		0		1
-EOF
+#/dev/mmcblk1p1	/boot	vfat	defaults			0		2
+#/dev/mmcblk1p2	/	ext4	defaults,noatime		0		1
+#EOF
 
 # Clean up
 rm -f "$DEST/usr/bin/qemu-aarch64-static"
