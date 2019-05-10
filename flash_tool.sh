@@ -18,8 +18,8 @@ PATH=$PATH:$TOOLPATH
 source $LOCALPATH/scripts/partitions.sh
 
 usage() {
-	echo -e "\nUsage: emmc: build/flash_tool.sh -c rk3288  -p system -i out/system.img  \n"
-	echo -e "       sdcard: build/flash_tool.sh -c rk3288  -d /dev/sdb -p system  -i out/system.img \n"
+	echo -e "\nUsage: emmc: ./flash_tool.sh -c rk3399  -p system -i ../output/system.img  \n"
+	echo -e "       sdcard: ./flash_tool.sh -c rk3399  -d /dev/sdb -p system  -i ../output/system.img \n"
 }
 
 finish() {

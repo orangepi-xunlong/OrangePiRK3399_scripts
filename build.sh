@@ -178,7 +178,6 @@ OPTION=$(whiptail --title "OrangePi Build System" \
 	"3"   "Update kernel Image" \
 	"4"   "Update Module" \
 	"5"   "Update Uboot" \
-	"6"   "Install Image into EMMC" \
 	3>&1 1>&2 2>&3)
 
 	#"0"   "Build Release Image" \
