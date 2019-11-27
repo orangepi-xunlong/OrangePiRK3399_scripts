@@ -199,7 +199,7 @@ apt-get -y install libgstreamer1.0-dev
 apt-get -y install libgstreamer-plugins-base1.0-dev 
 apt-get -y install libgstreamer-plugins-bad1.0-dev
 
-cd /packages/zip
+cd /packages/source
 unzip libdrm-rockchip-rockchip-2.4.74.zip
 cd libdrm-rockchip-rockchip-2.4.74
 ./autogen.sh --prefix=/usr 
@@ -235,7 +235,7 @@ cd -
 
 
 # git clone https://github.com/rockchip-linux/camera_engine_rkisp.git
-unzip camera_engine_rkisp.zip
+tar -xf camera_engine_rkisp.tar.xz
 cd camera_engine_rkisp
 mkdir -p build
 make CROSS_COMPILE=
@@ -275,9 +275,9 @@ apt-get install -y bison flex libffi-dev libmount-dev \
 apt-get -y install libasound2-dev libx11-dev unzip
 apt-get -y install libxext-dev
 
-cd /packages/zip
+cd /packages/source
 # install glib	
-tar xvf glib-2.52.3.tar
+tar -xf glib-2.52.3.tar.xz
 cd glib-2.52.3
 ./autogen.sh 
 make -j12

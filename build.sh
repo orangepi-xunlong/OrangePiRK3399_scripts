@@ -152,7 +152,7 @@ case "${PLATFORM}" in
 
 		ARCH="arm64"
 		CHIP="RK3399"
-		TOOLS=$ROOT/toolchain/gcc-linaro-aarch/bin/aarch64-linux-gnu-
+		TOOLS=$ROOT/toolchain/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
 		if [ $BOARD = "4" ]; then
 			KERNEL_NAME="linux4.4.179"
 		elif [ $BOARD = "rk3399" ]; then 
@@ -207,7 +207,7 @@ case "${OPTION}" in
 		compile_module
 		;;
 	"5")
-		boot_check
+		[ "${PLATFORM}" = "OrangePiRK3399" ] && uboot_check || boot_check
 		kernel_update
 		;;
 	"6")

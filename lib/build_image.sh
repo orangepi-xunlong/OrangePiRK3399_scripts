@@ -78,7 +78,7 @@ EOF
 
 build_image()
 {	
-	if [ $BOARD = "4" ]
+	if [ $BOARD = "4" ]; then
 		build_image_rk
 		return
 	fi

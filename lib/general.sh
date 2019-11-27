@@ -25,8 +25,6 @@ uboot_check()
 
 boot_check()
 {
-	[ $PLATFORM = "OrangePiRK3399" ] && uboot_check && return 1
-
         for ((i = 0; i < 5; i++)); do
                 BOOT_PATH=$(whiptail --title "OrangePi Build System" \
                         --inputbox "Pls input mount path of BOOT.(/media/orangepi/BOOT)" \
@@ -81,7 +79,7 @@ prepare_host()
 		        bsdtar mtools u-boot-tools pv bc \
 		        gcc automake make binfmt-support flex \
 		        lib32z1 lib32z1-dev qemu-user-static bison \
-		        dosfstools libncurses5-dev lib32stdc++-5-dev debootstrap \
+		        dosfstools libncurses5-dev debootstrap \
 		        swig libpython2.7-dev libssl-dev python-minimal dos2unix
 
 	# Prepare toolchains
@@ -111,6 +109,9 @@ kernel_update()
 			rm -rf $BOOT_PATH/dtb
 			cp -rf $KERNEL_IMAGE $BOOT_PATH/zImage
 			cp -rf $BUILD/dtb $BOOT_PATH/
+			;;
+		"OrangePiRK3399")
+			pv $BUILD/kernel/boot.img  | dd of=$UBOOT_PATH seek=49152 conv=notrunc
 			;;
 		"*")
 			;;
@@ -154,6 +155,11 @@ uboot_update()
 			dd if=/dev/zero of=$UBOOT_PATH bs=1k seek=8 count=1015
 			uboot=$BUILD/uboot/u-boot-sunxi-with-spl.bin-${BOARD}
 			dd if=$uboot of=$UBOOT_PATH conv=notrunc bs=1k seek=16400
+			;;
+		"OrangePiRK3399")
+			dd if=$BUILD/uboot/idbloader.img of=$UBOOT_PATH seek=64
+                	dd if=$BUILD/uboot/uboot.img of=$UBOOT_PATH seek=24576
+                	dd if=$BUILD/uboot/trust.img of=$UBOOT_PATH seek=32768
 			;;
 		"*")
 			;;
