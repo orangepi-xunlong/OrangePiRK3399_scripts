@@ -27,7 +27,7 @@ fi
 # Knernel Direct
 LINUX=$ROOT/kernel
 # Compile Toolchain
-TOOLS=$ROOT/toolchain/gcc-linaro-aarch/bin/aarch64-linux-gnu-
+TOOLS=$ROOT/toolchain/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
 # OUTPUT DIRECT
 BUILD=$ROOT/output
 EXTLINUXPATH=$ROOT/external/extlinux
