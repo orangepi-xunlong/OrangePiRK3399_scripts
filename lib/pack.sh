@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 do_prepare()
 {
 	FILE="${CHIP_FILE}"/pack/bin

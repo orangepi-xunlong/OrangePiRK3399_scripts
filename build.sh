@@ -47,7 +47,10 @@ source "${SCRIPTS}"/lib/compilation.sh
 source "${SCRIPTS}"/lib/distributions.sh
 source "${SCRIPTS}"/lib/build_image.sh
 
-prepare_host
+if [ ! -f $BUILD/.prepare_host ]; then
+        prepare_host
+        touch $BUILD/.prepare_host
+fi
 
 MENUSTR="Welcome to Orange Pi Build System. Pls choose Platform."
 #################################################################
