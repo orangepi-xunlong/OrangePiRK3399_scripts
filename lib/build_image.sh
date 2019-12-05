@@ -24,22 +24,22 @@ build_image_rk()
 	dd if=/dev/zero of=${IMAGE}2 bs=1M count=$(expr $IMG_ROOTFS_SIZE  \/ 1024 )
 	mkfs.ext4 -O ^metadata_csum -F -b 4096 -E stride=2,stripe-width=1024 -L rootfs ${IMAGE}2
 	
-	if [ ! -d /media/tmp ]; then
-		mkdir -p /media/tmp
+	if [ ! -d /tmp/tmp ]; then
+		mkdir -p /tmp/tmp
 	fi
 
-	mount -t ext4 ${IMAGE}2 /media/tmp
+	mount -t ext4 ${IMAGE}2 /tmp/tmp
 	# Add rootfs into Image
-	cp -rfa $DEST/* /media/tmp
+	cp -rfa $DEST/* /tmp/tmp
 
-	umount /media/tmp
+	umount /tmp/tmp
 
 	if [ -d $BUILD/orangepi ]; then
 		rm -rf $BUILD/orangepi
 	fi 
 
-	if [ -d /media/tmp ]; then
-		rm -rf /media/tmp
+	if [ -d /tmp/tmp ]; then
+		rm -rf /tmp/tmp
 	fi
 
 	echo "Generate SD boot image : ${SDBOOTIMG} !"
@@ -64,7 +64,7 @@ EOF
 	dd if=$BUILD/uboot/trust.img of=$IMAGE seek=$TRUST_START conv=notrunc,fsync
 	dd if=$BUILD/kernel/boot.img of=$IMAGE seek=$BOOT_START conv=notrunc,fsync
 	dd if=${IMAGE}2 of=$IMAGE seek=$ROOTFS_START conv=notrunc,fsync
-	#rm -f ${IMAGE}2
+	rm -f ${IMAGE}2
 	cd ${BUILD}/images/
 	rm -f ${IMAGENAME}.tar.gz
 	md5sum ${IMAGE} > ${IMAGE}.md5sum

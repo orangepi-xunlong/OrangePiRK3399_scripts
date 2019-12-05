@@ -138,17 +138,15 @@ case "${PLATFORM}" in
 			UBOOT_COMPILE="${TOOLS}"
 		fi
 		;;
-	"OrangePiRK3399")
+	"OrangePiRK3399_Pi4")
 		OPTION=$(whiptail --title "Orange Pi Build System" \
 		        --menu "$MENUSTR" 15 60 5 --cancel-button Exit --ok-button Select \
 		        "0"  "OrangePi 4" \
-		        "1"  "OrangePi RK3399" \
 		        3>&1 1>&2 2>&3)
 
 		case "${OPTION}" in 
 			"0") BOARD="4" ;;
-			"1") BOARD="rk3399" ;;
-			"*") 
+			*) 
 			echo -e "\e[1;31m Pls select correct board \e[0m"
 			exit 0 ;;
 		esac
@@ -156,13 +154,9 @@ case "${PLATFORM}" in
 		ARCH="arm64"
 		CHIP="RK3399"
 		TOOLS=$ROOT/toolchain/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
-		if [ $BOARD = "4" ]; then
-			KERNEL_NAME="linux4.4.179"
-		elif [ $BOARD = "rk3399" ]; then 
-			KERNEL_NAME="linux4.4.103"
-		fi
+		KERNEL_NAME="linux4.4.179"
 		;;
-	"*")
+	*)
 		echo -e "\e[1;31m Pls select correct platform \e[0m"
 		exit 0
 		;;
@@ -186,6 +180,7 @@ case "${OPTION}" in
 		select_distro
 		compile_uboot
 		compile_kernel
+		compile_module
 		build_rootfs
 		build_image 
 
@@ -196,6 +191,7 @@ case "${OPTION}" in
 		select_distro
 		compile_uboot
 		compile_kernel
+		compile_module
 		build_rootfs
 		whiptail --title "OrangePi Build System" --msgbox "Succeed to build rootfs" \
 			10 40 0 --ok-button Continue
@@ -205,12 +201,13 @@ case "${OPTION}" in
 		;;
 	"3")
 		compile_kernel
+		compile_module
 		;;
 	"4")
 		compile_module
 		;;
 	"5")
-		[ "${PLATFORM}" = "OrangePiRK3399" ] && uboot_check || boot_check
+		[ "${PLATFORM}" = "OrangePiRK3399_Pi4" ] && uboot_check || boot_check
 		kernel_update
 		;;
 	"6")
@@ -221,7 +218,7 @@ case "${OPTION}" in
 		uboot_check
 		uboot_update
 		;;
-	"*")
+	*)
 		whiptail --title "OrangePi Build System" \
 			--msgbox "Pls select correct option" 10 50 0
 		;;

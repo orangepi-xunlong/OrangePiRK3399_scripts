@@ -334,6 +334,13 @@ make -j12
 make install
 cd -
 
+tar -xvf gst-libav-1.12.2.tar.xz
+cd gst-libav-1.12.2/
+./autogen.sh --prefix=/usr --disable-gtk-doc
+make -j12
+make install
+cd -
+
 # install  xorg-macros 1.12
 # wget https://www.x.org/archive/individual/util/util-macros-1.12.0.tar.gz
 tar -xvf util-macros-1.12.0.tar.gz
@@ -471,7 +478,7 @@ do_conffile() {
         	cp $EXTER/mainline/install_to_emmc_$OS $DEST/usr/local/sbin/install_to_emmc -f
         	cp $EXTER/mainline/resize_rootfs.sh $DEST/usr/local/sbin/ -f
         	cp $EXTER/mainline/boot_emmc/* $DEST/opt/boot/ -f
-	elif [ "${PLATFORM}" = "OrangePiRK3399" ]; then
+	elif [ "${PLATFORM}" = "OrangePiRK3399_Pi4" ]; then
 		cp $EXTER/install_to_emmc_$OS $DEST/usr/local/sbin/install_to_emmc -f
 		cp $BUILD/uboot/*.img $DEST/boot/ -f
 		cp $BUILD/kernel/boot.img $DEST/boot/ -f
@@ -786,8 +793,9 @@ EOF
 		mkdir "$DEST/lib/modules"
 	fi
 
-	if [ $PLATFORM = "OrangePiRK3399" ]; then
+	if [ $PLATFORM = "OrangePiRK3399_Pi4" ]; then
 		echo "" > $DEST/etc/fstab
+		echo "ttyFIQ0" >> $DEST/etc/securetty
 	fi
 	# Install Kernel modules
 	make -C $LINUX ARCH=${ARCH} CROSS_COMPILE=$TOOLS modules_install INSTALL_MOD_PATH="$DEST"
@@ -802,7 +810,7 @@ EOF
 
 desktop_setup()
 {
-	if [ $PLATFORM = "OrangePiRK3399" ]; then
+	if [ $PLATFORM = "OrangePiRK3399_Pi4" ]; then
 		sed -i '/^TimeoutStartSec=/s/5min/15sec/' $DEST/lib/systemd/system/networking.service
 		sed -i '/^wallpaper=/s/\/etc\/alternatives\/desktop-background/\/usr\/share\/lxde\/wallpapers\/lxde_blue.jpg/' $DEST/etc/xdg/pcmanfm/LXDE/pcmanfm.conf
 		cp -rfa $EXTER/packages $DEST
