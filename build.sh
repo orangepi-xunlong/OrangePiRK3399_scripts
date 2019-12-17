@@ -46,6 +46,7 @@ source "${SCRIPTS}"/lib/pack.sh
 source "${SCRIPTS}"/lib/compilation.sh
 source "${SCRIPTS}"/lib/distributions.sh
 source "${SCRIPTS}"/lib/build_image.sh
+source "${SCRIPTS}"/lib/platform/rk3399.sh
 
 if [ ! -f $BUILD/.prepare_host ]; then
         prepare_host
@@ -180,7 +181,6 @@ case "${OPTION}" in
 		select_distro
 		compile_uboot
 		compile_kernel
-		compile_module
 		build_rootfs
 		build_image 
 
@@ -191,7 +191,6 @@ case "${OPTION}" in
 		select_distro
 		compile_uboot
 		compile_kernel
-		compile_module
 		build_rootfs
 		whiptail --title "OrangePi Build System" --msgbox "Succeed to build rootfs" \
 			10 40 0 --ok-button Continue
@@ -201,7 +200,6 @@ case "${OPTION}" in
 		;;
 	"3")
 		compile_kernel
-		compile_module
 		;;
 	"4")
 		compile_module
