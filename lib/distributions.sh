@@ -56,14 +56,14 @@ echo "  installing xserver & lxde desktop, please wait..."
 apt-get $_auto install xinit xserver-xorg 
 apt-get $_auto install lxde lightdm lightdm-gtk-greeter policykit-1 --no-install-recommends
 
-apt-get $_auto lxssession
-apt-get $_auto net-tools
+apt-get $_auto install net-tools
+apt-get $_auto install lxsession-logout
 apt-get clean
 
 if [ "${_DST}" = "Ubuntu" ] ; then
     apt-get $_auto install humanity-icon-theme --no-install-recommends 
 fi
-apt-get $_auto install pulseaudio pulseaudio-module-x11 pulseaudio-utils alsa-base alsa-oss alsa-utils alsa-tools libasound2-data pavucontrol --no-install-recommends
+apt-get $_auto install pulseaudio pulseaudio-utils alsa-base alsa-oss alsa-utils alsa-tools libasound2-data pavucontrol
 apt-get $_auto install smplayer 
 apt-get $_auto install synaptic software-properties-gtk lxtask galculator policykit-1-gnome gksu --no-install-recommends
 apt-get clean
@@ -156,7 +156,7 @@ deboostrap_rootfs() {
 
 	# keeping things clean as this is copied later again
 #	rm -f rootfs/usr/bin/qemu-arm-static
-       if [ $ARCH = "arm64"]; then 
+       if [ $ARCH = "arm64" ]; then 
                rm -f rootfs/usr/bin/qemu-aarch64-static
        elif [ $ARCH = "armhf" ]; then
                rm -f rootfs/usr/bin/qemu-arm-static

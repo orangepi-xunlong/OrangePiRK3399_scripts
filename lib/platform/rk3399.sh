@@ -135,12 +135,12 @@ EOF
 	        cat > "$DEST/type-phase" << EOF
 
 #!/bin/bash -e
-apt-get install -y bison flex libffi-dev libmount-dev \
-	libpcre3 libpcre3-dev zlib1g-dev libssl-dev \
-	gtk-doc-tools automake autoconf \
-	libtool gettext make autopoint g++ xz-utils
+
+apt-get install -y bison flex libffi-dev libmount-dev libpcre3 libpcre3-dev zlib1g-dev libssl-dev gtk-doc-tools \
+        automake autoconf libtool  gettext make autopoint g++ xz-utils net-tools
+apt-get install -y libasound2-dev libx11-dev
 	
-apt-get -y install libasound2-dev libx11-dev unzip
+apt-get -y install unzip
 apt-get -y install libxext-dev
 apt-get -y install libjpeg62-dev
 apt-get -y install gdisk
