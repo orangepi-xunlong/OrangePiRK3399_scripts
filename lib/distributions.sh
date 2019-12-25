@@ -517,6 +517,7 @@ EOF
 	if [ $PLATFORM = "OrangePiRK3399_Pi4" ]; then
 		echo "" > $DEST/etc/fstab
 		echo "ttyFIQ0" >> $DEST/etc/securetty
+		setup_resize-helper
 	fi
 	# Install Kernel modules
 	make -C $LINUX ARCH=${ARCH} CROSS_COMPILE=$TOOLS modules_install INSTALL_MOD_PATH="$DEST"
