@@ -1,5 +1,16 @@
 #!/bin/bash
 
+setup_front()
+{
+	cat > "$DEST/type-phase" << EOF
+#!/bin/bash -e
+apt-get -y install ttf-wqy-zenhei
+EOF
+	chmod +x "$DEST/type-phase"
+ 	do_chroot /type-phase
+	sync
+	rm -f "$DEST/type-phase"
+}
 setup_resize-helper()
 {
 	cat > "$DEST/usr/sbin/resize-helper" << "EOF"
@@ -128,6 +139,105 @@ fi
 }
 
 
+compile_gst()
+{
+	cat > "$DEST/type-phase" << EOF
+#!/bin/bash -e
+
+cd /packages/source
+mkdir -p /opt/build
+
+if [ $DISTRO = "xenial" -o $DISTRO = "stretch" ]; then
+# install orc
+tar -xvf orc-0.4.25.tar
+cd orc-0.4.25
+./autogen.sh --prefix=/usr
+make
+make install
+cd -
+
+
+# install  xorg-macros 1.12
+# wget https://www.x.org/archive/individual/util/util-macros-1.12.0.tar.gz
+tar -xvf util-macros-1.12.0.tar.gz
+cd util-macros-1.12.0
+./configure --prefix=/usr
+make
+make install
+cd -
+fi
+
+unzip libdrm-rockchip-rockchip-2.4.74.zip
+cd libdrm-rockchip-rockchip-2.4.74
+./autogen.sh --prefix=/usr 
+make
+make install
+make install DESTDIR=/opt/build/
+cd -
+
+#git clone https://github.com/rockchip-linux/mpp.git
+unzip mpp-release.zip
+cd mpp-release/build/linux/aarch64
+./make-Makefiles.bash
+make
+make install
+make install DESTDIR=/opt/build/
+cd -
+
+#git clone https://github.com/rockchip-linux/gstreamer-rockchip.git
+unzip gstreamer-rockchip.zip
+cd gstreamer-rockchip-master
+./autogen.sh --prefix=/usr --enable-gst --disable-rkximage
+make 
+make install DESTDIR=/opt/build/
+cd -
+
+
+# git clone https://github.com/rockchip-linux/gstreamer-rockchip-extra.git
+unzip gstreamer-rockchip-extra.zip
+cd gstreamer-rockchip-extra-master
+./autogen.sh --prefix=/usr --enable-gst --enable-rkximage
+make
+make install DESTDIR=/opt/build/
+cd -
+
+
+
+# git clone https://github.com/rockchip-linux/camera_engine_rkisp.git
+tar -xf camera_engine_rkisp.tar.xz
+cd camera_engine_rkisp
+mkdir -p build
+make CROSS_COMPILE=
+
+mkdir -p /opt/build/etc/iqfiles
+cp iqfiles/ov13850_CMK-CT0116_Largan-50013A1.xml /opt/build/etc/iqfiles
+mkdir -p /opt/build/usr/lib/rkisp/ae
+mkdir -p /opt/build/usr/lib/rkisp/af
+mkdir -p /opt/build/usr/lib/rkisp/awb
+
+cp ./build/lib/librkisp.so /opt/build/usr/lib  -a
+cp ./build/lib/libgstrkisp.so /opt/build/usr/lib/gstreamer-1.0/ -a
+cp ./build/ext/rkisp/usr/lib/gstreamer-1.0/libgstvideo4linux2.so /opt/build/usr/lib/  -a
+cp ./plugins/3a/rkiq/aec/lib64/librkisp_aec.so /opt/build/usr/lib/rkisp/ae  -a
+cp ./plugins/3a/rkiq/af/lib64/librkisp_af.so /opt/build/usr/lib/rkisp/af -a
+cp ./plugins/3a/rkiq/awb/lib64/librkisp_awb.so /opt/build/usr/lib/rkisp/awb -a
+
+cd -
+mkdir -p /opt/build/usr/local/
+cp /packages/test.mp4 /opt/build/usr/local/
+
+EOF
+	chmod +x "$DEST/type-phase"
+ 	do_chroot /type-phase
+	sync
+	rm -f "$DEST/type-phase"
+	
+	rm -rf $BUILD/build
+	mv $DEST/opt/build $BUILD
+	cd $BUILD
+	tar czf build_for_${DISTRO}.tar.gz build
+        cd -
+}
 install_gstreamer()
 {
 	if [ $DISTRO = "bionic" ]; then 
@@ -150,69 +260,10 @@ apt-get -y install libgstreamer1.0-dev
 apt-get -y install libgstreamer-plugins-base1.0-dev 
 apt-get -y install libgstreamer-plugins-bad1.0-dev
 
-cd /packages/source
-unzip libdrm-rockchip-rockchip-2.4.74.zip
-cd libdrm-rockchip-rockchip-2.4.74
-./autogen.sh --prefix=/usr 
-make
-make install 
-cd -
-
-#git clone https://github.com/rockchip-linux/mpp.git
-unzip mpp-release.zip
-cd mpp-release/build/linux/aarch64
-./make-Makefiles.bash
-make
-make install
-cd -
-
-#git clone https://github.com/rockchip-linux/gstreamer-rockchip.git
-unzip gstreamer-rockchip.zip
-cd gstreamer-rockchip-master
-./autogen.sh --prefix=/usr --enable-gst --disable-rkximage
-make 
-make install
-cd -
-
-
-# git clone https://github.com/rockchip-linux/gstreamer-rockchip-extra.git
-unzip gstreamer-rockchip-extra.zip
-cd gstreamer-rockchip-extra-master
-./autogen.sh --prefix=/usr --enable-gst --enable-rkximage
-make
-make install
-cd -
-
-
-
-# git clone https://github.com/rockchip-linux/camera_engine_rkisp.git
-tar -xf camera_engine_rkisp.tar.xz
-cd camera_engine_rkisp
-mkdir -p build
-make CROSS_COMPILE=
-
-mkdir -p /etc/iqfiles
-cp iqfiles/ov13850_CMK-CT0116_Largan-50013A1.xml /etc/iqfiles
-mkdir -p /usr/lib/rkisp/ae
-mkdir -p /usr/lib/rkisp/af
-mkdir -p /usr/lib/rkisp/awb
-
-cp ./build/lib/librkisp.so /usr/lib  -a
-cp ./build/lib/libgstrkisp.so /usr/lib/gstreamer-1.0/ -a
-cp ./build/ext/rkisp/usr/lib/gstreamer-1.0/libgstvideo4linux2.so /usr/lib/gstreamer-1.0/  -a
-cp ./plugins/3a/rkiq/aec/lib64/librkisp_aec.so /usr/lib/rkisp/ae  -a
-cp ./plugins/3a/rkiq/af/lib64/librkisp_af.so /usr/lib/rkisp/af -a
-cp ./plugins/3a/rkiq/awb/lib64/librkisp_awb.so /usr/lib/rkisp/awb -a
-
-cd -
-#cp -rfa /usr/lib/gstreamer-1.0/* /usr/lib/aarch64-linux-gnu/gstreamer-1.0/
-#cp /packages/test.mp4 /usr/local -f
-
-cp /usr/lib/gstreamer-1.0/* /usr/lib/aarch64-linux-gnu/gstreamer-1.0/ -rfa
-cp /packages/test.mp4 /usr/local/
-
 apt-get clean
 EOF
+
+	
 	elif [ $DISTRO = "xenial" -o $DISTRO = "stretch" ]; then
 #		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 	        cat > "$DEST/type-phase" << EOF
@@ -239,77 +290,6 @@ cp -rfa /packages/others/gstreamer/gst-plugins-bad-1.12.2/* /
 cp -rfa /packages/others/gstreamer/gst-plugins-ugly-1.12.2/* /
 cp -rfa /packages/others/gstreamer/gst-libav-1.12.2/* /
 
-
-cd /packages/source
-
-# install orc
-tar -xvf orc-0.4.25.tar
-cd orc-0.4.25
-./autogen.sh --prefix=/usr
-make -j4
-make install
-cd -
-
-
-# install  xorg-macros 1.12
-# wget https://www.x.org/archive/individual/util/util-macros-1.12.0.tar.gz
-tar -xvf util-macros-1.12.0.tar.gz
-cd util-macros-1.12.0
-./configure --prefix=/usr
-make
-make install
-cd -
- 
-unzip libdrm-rockchip-rockchip-2.4.74.zip
-cd libdrm-rockchip-rockchip-2.4.74
-./autogen.sh --prefix=/usr
-
-make -j4
-make install
-cd -
-
-
-unzip mpp-release.zip
-cd mpp-release/build/linux/aarch64/
-./make-Makefiles.bash
-make -j4
-make install
-cd -
-
-# git clone https://github.com/rockchip-linux/gstreamer-rockchip.git
-unzip gstreamer-rockchip.zip
-cd gstreamer-rockchip-master
-./autogen.sh --prefix=/usr --enable-gst --disable-rkximage
-make -j4
-make install
-cd -
-
-unzip gstreamer-rockchip-extra.zip
-cd gstreamer-rockchip-extra-master
-./autogen.sh --prefix=/usr --enable-gst --enable-rkximage
-make -j4
-make install
-cd -
-
-
-
-mkdir -p /etc/iqfiles
-cp /packages/others/iqfiles/ov13850_CMK-CT0116_Largan-50013A1.xml /etc/iqfiles
-mkdir -p /usr/lib/rkisp/ae
-mkdir -p /usr/lib/rkisp/af
-mkdir -p /usr/lib/rkisp/awb
-
-# gstreamer Camera Support
-cp /packages/others/rkisp/librkisp.so /usr/lib -a
-cp /packages/others/rkisp/libgstvideo4linux2.so /usr/lib/ -a
-cp /packages/others/rkisp/libgstrkisp.so /usr/lib/gstreamer-1.0 -a
-# 3A lib
-cp /packages/others/rkisp/librkisp_aec.so /usr/lib/rkisp/ae
-cp /packages/others/rkisp/librkisp_af.so /usr/lib/rkisp/af
-cp /packages/others/rkisp/librkisp_awb.so /usr/lib/rkisp/awb
-
-cp /packages/test.mp4 /usr/local -f
-
 apt-get clean
 EOF
 
@@ -319,4 +299,15 @@ EOF
 	sync
 	rm -f "$DEST/type-phase"
 
+	if [ ! -f $BUILD/build_for_${DISTRO}.tar.gz ]; then
+		compile_gst
+	fi
+	rm -rf $BUILD/build
+	tar zxf $BUILD/build_for_${DISTRO}.tar.gz -C $BUILD
+	cp -rfa $BUILD/build/* $DEST/ 
+
+	if [ $DISTRO = "bionic" ]; then 
+		cp $DEST/usr/lib/gstreamer-1.0/* $DEST/usr/lib/aarch64-linux-gnu/gstreamer-1.0/ -rfa
+	fi
+	sync
 }
