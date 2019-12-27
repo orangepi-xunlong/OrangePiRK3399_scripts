@@ -63,7 +63,8 @@ apt-get clean
 if [ "${_DST}" = "Ubuntu" ] ; then
     apt-get $_auto install humanity-icon-theme --no-install-recommends 
 fi
-apt-get $_auto install pulseaudio pulseaudio-utils alsa-base alsa-oss alsa-utils alsa-tools libasound2-data pavucontrol
+apt-get $_auto install pulseaudio pulseaudio-utils 
+apt-get $_auto alsa-base alsa-oss alsa-utils alsa-tools libasound2-data pavucontrol
 apt-get $_auto install smplayer 
 apt-get $_auto install synaptic software-properties-gtk lxtask galculator policykit-1-gnome gksu --no-install-recommends
 apt-get clean
@@ -537,6 +538,7 @@ desktop_setup()
 		sed -i '/^wallpaper=/s/\/etc\/alternatives\/desktop-background/\/usr\/share\/lxde\/wallpapers\/lxde_blue.jpg/' $DEST/etc/xdg/pcmanfm/LXDE/pcmanfm.conf
 		[ $DISTRO = "stretch" ] && echo -e "\n[device]\nwifi.scan-rand-mac-address=no" >> $DEST/etc/NetworkManager/NetworkManager.conf
 		[ $DISTRO = "stretch" ] && cp -rfa $EXTER/packages/others/glmark2/* $DEST
+		[ $DISTRO = "xenial" ] && setup_front
 		cp -rfa $EXTER/packages $DEST
 		cp -rfa $EXTER/packages/overlay/* $DEST
 		install_gstreamer
