@@ -55,18 +55,17 @@ echo "$_DST - $_REL, Installing LXDE DESKTOP..."
 echo "  installing xserver & lxde desktop, please wait..."
 apt-get $_auto install xinit xserver-xorg 
 apt-get $_auto install lxde lightdm lightdm-gtk-greeter policykit-1 --no-install-recommends
-
 apt-get $_auto install net-tools
 apt-get $_auto install lxsession-logout
 apt-get clean
 
 if [ "${_DST}" = "Ubuntu" ] ; then
-    apt-get $_auto install humanity-icon-theme --no-install-recommends 
+	apt-get $_auto install humanity-icon-theme --no-install-recommends 
 fi
-apt-get $_auto install pulseaudio pulseaudio-utils 
-apt-get $_auto alsa-base alsa-oss alsa-utils alsa-tools libasound2-data pavucontrol
+
+apt-get $_auto install pulseaudio pulseaudio-utils alsa-oss alsa-utils alsa-tools libasound2-data pavucontrol
 apt-get $_auto install smplayer 
-apt-get $_auto install synaptic software-properties-gtk lxtask galculator policykit-1-gnome gksu --no-install-recommends
+apt-get $_auto install synaptic software-properties-gtk lxtask galculator policykit-1-gnome --no-install-recommends
 apt-get clean
 
 # === Install network packages & internet browser =================================================================================================================================
@@ -94,7 +93,7 @@ fi
 if [ -f /etc/lightdm/lightdm-gtk-greeter.conf ]; then
     cat /etc/lightdm/lightdm-gtk-greeter.conf | sed "/background=\/usr/d" > /tmp/_greet
     mv /tmp/_greet /etc/lightdm/lightdm-gtk-greeter.conf
-    cat /etc/lightdm/lightdm-gtk-greeter.conf | sed '/\[greeter\]/abackground=\/usr\/share\/lxde\/wallpapers\/lxde_blue.jpg' > /tmp/_greet
+    cat /etc/lightdm/lightdm-gtk-greeter.conf | sed '/\[greeter\]/abackground=\/usr\/share\/lxde\/wallpapers\/orangepi.jpg' > /tmp/_greet
     mv /tmp/_greet /etc/lightdm/lightdm-gtk-greeter.conf
 fi
 
@@ -535,7 +534,10 @@ desktop_setup()
 {
 	if [ $PLATFORM = "OrangePiRK3399_Pi4" ]; then
 		sed -i '/^TimeoutStartSec=/s/5min/15sec/' $DEST/lib/systemd/system/networking.service
-		sed -i '/^wallpaper=/s/\/etc\/alternatives\/desktop-background/\/usr\/share\/lxde\/wallpapers\/lxde_blue.jpg/' $DEST/etc/xdg/pcmanfm/LXDE/pcmanfm.conf
+		sed -i '/^wallpaper=/s/\/etc\/alternatives\/desktop-background/\/usr\/share\/lxde\/wallpapers\/newxitong_17.jpg/' $DEST/etc/xdg/pcmanfm/LXDE/pcmanfm.conf
+		sed -i '/^[ ]*transparent=/s/0/1/' $DEST/etc/xdg/lxpanel/LXDE/panels/panel
+		sed -i '/^[ ]*background=/s/1/0/' $DEST/etc/xdg/lxpanel/LXDE/panels/panel
+
 		[ $DISTRO = "stretch" ] && echo -e "\n[device]\nwifi.scan-rand-mac-address=no" >> $DEST/etc/NetworkManager/NetworkManager.conf
 		[ $DISTRO = "stretch" ] && cp -rfa $EXTER/packages/others/glmark2/* $DEST
 		[ $DISTRO = "xenial" ] && setup_front
