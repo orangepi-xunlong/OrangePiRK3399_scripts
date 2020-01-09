@@ -200,6 +200,7 @@ case "${OPTION}" in
 		;;
 	"3")
 		compile_kernel
+		compile_module
 		;;
 	"4")
 		compile_module

@@ -201,8 +201,9 @@ do_conffile() {
         	cp $EXTER/mainline/boot_emmc/* $DEST/opt/boot/ -f
 	elif [ "${PLATFORM}" = "OrangePiRK3399_Pi4" ]; then
 		cp $EXTER/install_to_emmc_$OS $DEST/usr/local/sbin/install_to_emmc -f
-		cp $BUILD/uboot/*.img $DEST/boot/ -f
-		cp $BUILD/kernel/boot.img $DEST/boot/ -f
+		mkdir -p $DEST/usr/local/lib/install_to_emmc
+		cp $BUILD/uboot/*.img $DEST/usr/local/lib/install_to_emmc/ -f
+		cp $BUILD/kernel/boot.img $DEST/usr/local/lib/install_to_emmc/ -f
 		[ -d $DEST/system/etc/firmware ] || mkdir -p $DEST/system/etc/firmware
 		cp -rf $EXTER/firmware/* $DEST/system/etc/firmware
 		cp -rf $EXTER/asound.state $DEST/var/lib/alsa/

@@ -50,7 +50,7 @@ RESIZE2FS=$(which resize2fs) || { echo "E: You must have resize2fs" && exit 1; }
 
 # find root device
 # ROOT_DEVICE=$(findmnt --noheadings --output=SOURCE / | cut -d'[' -f1)
-ROOT_DEVICE="/dev/mmcblk0p4"
+ROOT_DEVICE="/dev/"$(sed -n 's/^DEVNAME=//p' /sys/dev/block/$(mountpoint -d /)/uevent 2> /dev/null)
 # prune root device (for example UUID)
 ROOT_DEVICE=$(realpath ${ROOT_DEVICE})
 # get the partition number and type
