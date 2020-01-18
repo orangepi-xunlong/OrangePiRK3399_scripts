@@ -248,6 +248,30 @@ EOF
 	do_chroot systemctl enable ssh-keygen
 }
 
+add_opi_python_gpio_libs() {
+        cp $EXTER/packages/OPi.GPIO $DEST/usr/local/sbin/ -rfa
+        cp $EXTER/packages/OPi.GPIO/test_gpio.py $DEST/usr/local/sbin/ -f
+
+        cat > "$DEST/install_opi_gpio" <<EOF
+#!/bin/bash
+apt-get install -y python3-pip python3-setuptools
+cd /usr/local/sbin/OPi.GPIO
+python3 setup.py install
+EOF
+        chmod +x "$DEST/install_opi_gpio"
+        do_chroot /install_opi_gpio
+	rm $DEST/install_opi_gpio
+}
+
+add_opi_config_libs() {
+	do_chroot apt-get install -y dialog expect bc cpufrequtils figlet toilet lsb-release
+        cp $EXTER/packages/opi_config_libs $DEST/usr/local/sbin/ -rfa
+        cp $EXTER/packages/opi_config_libs/opi-config $DEST/usr/local/sbin/ -rfa
+
+	rm -rf $DEST/etc/update-motd.d/* 
+        cp $EXTER/packages/opi_config_libs/overlay/* $DEST/ -rf
+}
+
 add_debian_apt_sources() {
 	local release="$1"
 	local aptsrcfile="$DEST/etc/apt/sources.list"
@@ -495,6 +519,8 @@ EOF
 
 	do_conffile
 	add_ssh_keygen_service
+	add_opi_python_gpio_libs
+	add_opi_config_libs
 	sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 	rm -f "$DEST"/etc/ssh/ssh_host_*
 
