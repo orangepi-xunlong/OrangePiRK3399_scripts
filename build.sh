@@ -28,7 +28,7 @@ SOURCES="CN"
 METHOD="download"
 KERNEL_NAME="linux"
 UNTAR="bsdtar -xpf"
-CORES=$((`cat /proc/cpuinfo | grep processor | wc -l` - 1))
+CORES=$(nproc --ignore=1)
 PLATFORM="$(basename `pwd`)"
 
 if [[ "${EUID}" == 0 ]]; then
