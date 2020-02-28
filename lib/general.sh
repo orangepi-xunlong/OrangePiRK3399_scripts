@@ -119,7 +119,7 @@ kernel_update()
 			cp -rf $KERNEL_IMAGE $BOOT_PATH/Image
 			cp -rf $BUILD/dtb/allwinner/* $BOOT_PATH/dtb/allwinner/
 			;;
-		"OrangePiRK3399_Pi4")
+		"OrangePiRK3399")
 			pv $BUILD/kernel/boot.img  | dd of=$UBOOT_PATH seek=49152 conv=notrunc
 			;;
 		"*")
@@ -165,7 +165,7 @@ uboot_update()
 			uboot=$BUILD/uboot/u-boot-sunxi-with-spl.bin-${BOARD}
 			dd if=$uboot of=$UBOOT_PATH conv=notrunc bs=1k seek=16400
 			;;
-		"OrangePiRK3399_Pi4")
+		"OrangePiRK3399")
 			dd if=$BUILD/uboot/idbloader.img of=$UBOOT_PATH seek=64
                 	dd if=$BUILD/uboot/uboot.img of=$UBOOT_PATH seek=24576
                 	dd if=$BUILD/uboot/trust.img of=$UBOOT_PATH seek=32768

@@ -37,7 +37,7 @@ compile_uboot()
 
 			cp "$UBOOT"/u-boot-sunxi-with-spl.bin "$UBOOT_BIN"/u-boot-sunxi-with-spl.bin-"${BOARD}" -f
 			;;
-		"OrangePiRK3399_Pi4")
+		"OrangePiRK3399")
 			./make.sh rk3399
 			cp -rf uboot.img $UBOOT_BIN
 			cp -rf trust.img $UBOOT_BIN
@@ -67,17 +67,6 @@ compile_kernel()
 	fi
 
 	echo -e "\e[1;31m Start compiling the kernel ...\e[0m"
-
-	if [ ! -f $LINUX/.config ]; then
-		if [ "$PLATFORM" = "OrangePiRK3399_Pi4" ]; then
-			make -C $LINUX ARCH=${ARCH} CROSS_COMPILE=$TOOLS ${BOARD}_linux_defconfig
-			echo -e "\e[1;31m Using ${BOARD}_linux_defconfig\e[0m"
-		else
-			make -C $LINUX ARCH="${ARCH}" CROSS_COMPILE=$TOOLS "${CHIP}"smp_defconfig
-			echo -e "\e[1;31m Using "${CHIP}"smp_defconfig\e[0m"
-		fi
-	
-	fi
 
 	case "${PLATFORM}" in 
 		"OrangePiH3")
@@ -120,8 +109,10 @@ compile_kernel()
 
 			cp $LINUX/System.map $BUILD/kernel/System.map-$BOARD
 			;;
-		"OrangePiRK3399_Pi4")
-			make -C $LINUX ARCH=${ARCH} CROSS_COMPILE=$TOOLS -j${CORES} rk3399-orangepi.img
+		"OrangePiRK3399")
+			make -C $LINUX ARCH=${ARCH} CROSS_COMPILE=$TOOLS ${BOARD}_linux_defconfig
+			echo -e "\e[1;31m Using ${BOARD}_linux_defconfig\e[0m"
+			make -C $LINUX ARCH=${ARCH} CROSS_COMPILE=$TOOLS -j${CORES} rk3399-orangepi-${BOARD}.img
 			make -C $LINUX ARCH=${ARCH} CROSS_COMPILE=$TOOLS -j${CORES} modules
 			cp $LINUX/boot.img $BUILD/kernel
 			;;

@@ -199,7 +199,7 @@ do_conffile() {
         	cp $EXTER/mainline/install_to_emmc_$OS $DEST/usr/local/sbin/install_to_emmc -f
         	cp $EXTER/mainline/resize_rootfs.sh $DEST/usr/local/sbin/ -f
         	cp $EXTER/mainline/boot_emmc/* $DEST/opt/boot/ -f
-	elif [ "${PLATFORM}" = "OrangePiRK3399_Pi4" ]; then
+	elif [ "${PLATFORM}" = "OrangePiRK3399" ]; then
 		cp $EXTER/install_to_emmc_$OS $DEST/usr/local/sbin/install_to_emmc -f
 		mkdir -p $DEST/usr/local/lib/install_to_emmc
 		cp $BUILD/uboot/*.img $DEST/usr/local/lib/install_to_emmc/ -f
@@ -541,7 +541,7 @@ EOF
 		mkdir "$DEST/lib/modules"
 	fi
 
-	if [ $PLATFORM = "OrangePiRK3399_Pi4" ]; then
+	if [ $PLATFORM = "OrangePiRK3399" ]; then
 		echo "" > $DEST/etc/fstab
 		echo "ttyFIQ0" >> $DEST/etc/securetty
 		setup_resize-helper
@@ -559,7 +559,7 @@ EOF
 
 desktop_setup()
 {
-	if [ $PLATFORM = "OrangePiRK3399_Pi4" ]; then
+	if [ $PLATFORM = "OrangePiRK3399" ]; then
 		sed -i '/^TimeoutStartSec=/s/5min/15sec/' $DEST/lib/systemd/system/networking.service
 		sed -i '/^wallpaper=/s/\/etc\/alternatives\/desktop-background/\/usr\/share\/lxde\/wallpapers\/newxitong_17.jpg/' $DEST/etc/xdg/pcmanfm/LXDE/pcmanfm.conf
 		sed -i '/^[ ]*transparent=/s/0/1/' $DEST/etc/xdg/lxpanel/LXDE/panels/panel

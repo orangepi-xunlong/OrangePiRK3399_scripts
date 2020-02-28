@@ -139,14 +139,16 @@ case "${PLATFORM}" in
 			UBOOT_COMPILE="${TOOLS}"
 		fi
 		;;
-	"OrangePiRK3399_Pi4")
+	"OrangePiRK3399")
 		OPTION=$(whiptail --title "Orange Pi Build System" \
 		        --menu "$MENUSTR" 15 60 5 --cancel-button Exit --ok-button Select \
 		        "0"  "OrangePi 4" \
+		        "1"  "OrangePi rk3399" \
 		        3>&1 1>&2 2>&3)
 
 		case "${OPTION}" in 
 			"0") BOARD="4" ;;
+			"1") BOARD="rk3399" ;;
 			*) 
 			echo -e "\e[1;31m Pls select correct board \e[0m"
 			exit 0 ;;
@@ -206,7 +208,7 @@ case "${OPTION}" in
 		compile_module
 		;;
 	"5")
-		[ "${PLATFORM}" = "OrangePiRK3399_Pi4" ] && uboot_check || boot_check
+		[ "${PLATFORM}" = "OrangePiRK3399" ] && uboot_check || boot_check
 		kernel_update
 		;;
 	"6")
