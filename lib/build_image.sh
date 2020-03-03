@@ -1,6 +1,6 @@
 #!/bin/bash
 
-build_image_rk()
+build_rk_image()
 {
 	VER="v1.3"
 	IMAGENAME="OrangePi_${BOARD}_${OS}_${DISTRO}_${IMAGETYPE}_${KERNEL_NAME}_${VER}"
@@ -78,8 +78,8 @@ EOF
 
 build_image()
 {	
-	if [ $BOARD = "4" ]; then
-		build_image_rk
+	if [ ${PLATFORM} = "OrangePiRK3399" ]; then
+		build_rk_image
 		return
 	fi
 	VER="v1.0"
