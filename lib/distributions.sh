@@ -263,6 +263,22 @@ EOF
 	rm $DEST/install_opi_gpio
 }
 
+add_bt_service() {
+        cat > "$DEST/lib/systemd/system/bt.service" <<EOF
+[Unit]
+Description=OrangePi BT Service
+
+[Service]
+ExecStart=/usr/local/sbin/bt.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+        do_chroot systemctl enable bt.service
+}
+
+
 add_opi_config_libs() {
 	do_chroot apt-get install -y dialog expect bc cpufrequtils figlet toilet lsb-release
         cp $EXTER/packages/opi_config_libs $DEST/usr/local/sbin/ -rfa
@@ -422,7 +438,7 @@ prepare_rootfs_server()
 	if [ "$DISTRO" = "xenial" -o "$DISTRO" = "bionic" ]; then
 		DEB=ubuntu
 		DEBUSER=orangepi
-		EXTRADEBS="software-properties-common libjpeg8-dev usbmount zram-config ubuntu-minimal"
+		EXTRADEBS="software-properties-common libjpeg8-dev usbmount zram-config ubuntu-minimal net-tools"
 		ADDPPACMD=
 		DISPTOOLCMD=
 	elif [ "$DISTRO" = "sid" -o "$DISTRO" = "stretch" -o "$DISTRO" = "stable" ]; then
@@ -500,11 +516,11 @@ iface eth0 inet dhcp
 EOF
 	fi
 	cat > "$DEST/etc/hostname" <<EOF
-OrangePi
+orangepi${BOARD}
 EOF
 	cat > "$DEST/etc/hosts" <<EOF
 127.0.0.1 localhost
-127.0.1.1 orangepi
+127.0.1.1 orangepi${BOARD}
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     localhost ip6-localhost ip6-loopback
@@ -521,6 +537,7 @@ EOF
 	add_ssh_keygen_service
 	add_opi_python_gpio_libs
 	add_opi_config_libs
+	add_bt_service
 	sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 	rm -f "$DEST"/etc/ssh/ssh_host_*
 
@@ -565,6 +582,7 @@ desktop_setup()
 		sed -i '/^[ ]*transparent=/s/0/1/' $DEST/etc/xdg/lxpanel/LXDE/panels/panel
 		sed -i '/^[ ]*background=/s/1/0/' $DEST/etc/xdg/lxpanel/LXDE/panels/panel
 
+		echo -e "\n[keyfile]\nunmanaged-devices=*,except:type:ethernet,except:type:wifi,except:type:wwan" >> ${DEST}/etc/NetworkManager/NetworkManager.conf
 		[ $DISTRO = "stretch" ] && echo -e "\n[device]\nwifi.scan-rand-mac-address=no" >> $DEST/etc/NetworkManager/NetworkManager.conf
 		[ $DISTRO = "stretch" ] && cp -rfa $EXTER/packages/others/glmark2/* $DEST
 		[ $DISTRO = "xenial" ] && setup_front
