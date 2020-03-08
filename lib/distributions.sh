@@ -254,6 +254,7 @@ add_opi_python_gpio_libs() {
 
         cat > "$DEST/install_opi_gpio" <<EOF
 #!/bin/bash
+apt update
 apt-get install -y python3-pip python3-setuptools
 cd /usr/local/sbin/OPi.GPIO
 python3 setup.py install
@@ -561,6 +562,7 @@ EOF
 	if [ $PLATFORM = "OrangePiRK3399" ]; then
 		echo "" > $DEST/etc/fstab
 		echo "ttyFIQ0" >> $DEST/etc/securetty
+		sed -i '/^TimeoutStartSec=/s/5min/15sec/' $DEST/lib/systemd/system/networking.service
 		setup_resize-helper
 	fi
 	# Install Kernel modules
@@ -577,7 +579,6 @@ EOF
 desktop_setup()
 {
 	if [ $PLATFORM = "OrangePiRK3399" ]; then
-		sed -i '/^TimeoutStartSec=/s/5min/15sec/' $DEST/lib/systemd/system/networking.service
 		sed -i '/^wallpaper=/s/\/etc\/alternatives\/desktop-background/\/usr\/share\/lxde\/wallpapers\/newxitong_17.jpg/' $DEST/etc/xdg/pcmanfm/LXDE/pcmanfm.conf
 		sed -i '/^[ ]*transparent=/s/0/1/' $DEST/etc/xdg/lxpanel/LXDE/panels/panel
 		sed -i '/^[ ]*background=/s/1/0/' $DEST/etc/xdg/lxpanel/LXDE/panels/panel
