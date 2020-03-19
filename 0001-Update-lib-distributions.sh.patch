@@ -1,0 +1,40 @@
+From 30991638f2b02f87ab5f29f77a3cfd49faf41366 Mon Sep 17 00:00:00 2001
+From: baiywt <baiywt_gj@163.com>
+Date: Sun, 8 Mar 2020 17:04:57 +0800
+Subject: [PATCH] Update lib/distributions.sh
+
+---
+ lib/distributions.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/lib/distributions.sh b/lib/distributions.sh
+index a536b71..bc2aafc 100755
+--- a/lib/distributions.sh
++++ b/lib/distributions.sh
+@@ -254,6 +254,7 @@ add_opi_python_gpio_libs() {
+ 
+         cat > "$DEST/install_opi_gpio" <<EOF
+ #!/bin/bash
++apt update
+ apt-get install -y python3-pip python3-setuptools
+ cd /usr/local/sbin/OPi.GPIO
+ python3 setup.py install
+@@ -561,6 +562,7 @@ EOF
+ 	if [ $PLATFORM = "OrangePiRK3399" ]; then
+ 		echo "" > $DEST/etc/fstab
+ 		echo "ttyFIQ0" >> $DEST/etc/securetty
++		sed -i '/^TimeoutStartSec=/s/5min/15sec/' $DEST/lib/systemd/system/networking.service
+ 		setup_resize-helper
+ 	fi
+ 	# Install Kernel modules
+@@ -577,7 +579,6 @@ EOF
+ desktop_setup()
+ {
+ 	if [ $PLATFORM = "OrangePiRK3399" ]; then
+-		sed -i '/^TimeoutStartSec=/s/5min/15sec/' $DEST/lib/systemd/system/networking.service
+ 		sed -i '/^wallpaper=/s/\/etc\/alternatives\/desktop-background/\/usr\/share\/lxde\/wallpapers\/newxitong_17.jpg/' $DEST/etc/xdg/pcmanfm/LXDE/pcmanfm.conf
+ 		sed -i '/^[ ]*transparent=/s/0/1/' $DEST/etc/xdg/lxpanel/LXDE/panels/panel
+ 		sed -i '/^[ ]*background=/s/1/0/' $DEST/etc/xdg/lxpanel/LXDE/panels/panel
+-- 
+2.17.1
+

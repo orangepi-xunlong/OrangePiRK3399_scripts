@@ -67,7 +67,7 @@ EOF
 	rm -f ${IMAGE}2
 	cd ${BUILD}/images/
 	rm -f ${IMAGENAME}.tar.gz
-	md5sum ${IMAGE} > ${IMAGE}.md5sum
+	md5sum ${IMAGENAME}.img > ${IMAGENAME}.img.md5sum
 	tar czvf  ${IMAGENAME}.tar.gz $IMAGENAME.img*
 	rm -f *.md5sum
 
