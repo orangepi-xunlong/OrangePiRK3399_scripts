@@ -254,6 +254,7 @@ add_opi_python_gpio_libs() {
 
         cat > "$DEST/install_opi_gpio" <<EOF
 #!/bin/bash
+
 apt update
 apt-get install -y python3-pip python3-setuptools
 cd /usr/local/sbin/OPi.GPIO

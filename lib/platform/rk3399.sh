@@ -245,6 +245,7 @@ install_gstreamer()
 	cat > "$DEST/type-phase" << EOF
 #!/bin/bash -e
 
+apt-get update
 apt-get install -y bison flex libffi-dev libmount-dev libpcre3 libpcre3-dev zlib1g-dev libssl-dev gtk-doc-tools \
         automake autoconf libtool  gettext make autopoint g++ xz-utils net-tools
 apt-get install -y libasound2-dev libx11-dev
@@ -252,13 +253,15 @@ apt-get install -y libasound2-dev libx11-dev
 
 apt-get install -y unzip cmake make
 
+apt-get install -y v4l-utils libjpeg62
+tar xzf /packages/others/gstreamer/glib-2.52.3.tar.gz -C /
+tar xzf /packages/others/gstreamer/gstreamer-1.14.4.tar.gz -C /
+tar xzf /packages/others/gstreamer/gst-plugins-base-1.14.4.tar.gz -C /
+tar xzf /packages/others/gstreamer/gst-plugins-good-1.14.4.tar.gz -C /
+tar xzf /packages/others/gstreamer/gst-plugins-bad-1.14.4.tar.gz -C /
+tar xzf /packages/others/gstreamer/gst-plugins-ugly-1.14.4.tar.gz -C /
+tar xzf /packages/others/gstreamer/gst-libav-1.14.4.tar.gz -C /
 
-apt-get -y install gstreamer1.0-plugins-* 
-apt-get -y install gstreamer1.0-libav 
-apt-get -y install libgstreamer1.0*
-apt-get -y install libgstreamer1.0-dev 
-apt-get -y install libgstreamer-plugins-base1.0-dev 
-apt-get -y install libgstreamer-plugins-bad1.0-dev
 
 apt-get clean
 EOF
@@ -270,6 +273,7 @@ EOF
 
 #!/bin/bash -e
 
+apt-get update
 apt-get install -y bison flex libffi-dev libmount-dev libpcre3 libpcre3-dev zlib1g-dev libssl-dev gtk-doc-tools \
         automake autoconf libtool  gettext make autopoint g++ xz-utils net-tools
 apt-get install -y libasound2-dev libx11-dev
@@ -282,13 +286,14 @@ apt-get -y install gdisk
 apt-get -y install libxv-dev libpulse-dev
 apt-get -y install libgl1-mesa-dev libgles2-mesa
 
-cp -rfa /packages/others/gstreamer/glib-2.52.3/* /
-cp -rfa /packages/others/gstreamer/gstreamer-1.12.2/* /
-cp -rfa /packages/others/gstreamer/gst-plugins-base-1.12.2/* /
-cp -rfa /packages/others/gstreamer/gst-plugins-good-1.12.2/* /
-cp -rfa /packages/others/gstreamer/gst-plugins-bad-1.12.2/* /
-cp -rfa /packages/others/gstreamer/gst-plugins-ugly-1.12.2/* /
-cp -rfa /packages/others/gstreamer/gst-libav-1.12.2/* /
+apt-get install -y v4l-utils libpng16-16
+tar xzf /packages/others/gstreamer/glib-2.52.3.tar.gz -C /
+tar xzf /packages/others/gstreamer/gstreamer-1.14.4.tar.gz -C /
+tar xzf /packages/others/gstreamer/gst-plugins-base-1.14.4.tar.gz -C /
+tar xzf /packages/others/gstreamer/gst-plugins-good-1.14.4.tar.gz -C /
+tar xzf /packages/others/gstreamer/gst-plugins-bad-1.14.4.tar.gz -C /
+tar xzf /packages/others/gstreamer/gst-plugins-ugly-1.14.4.tar.gz -C /
+tar xzf /packages/others/gstreamer/gst-libav-1.14.4.tar.gz -C /
 
 apt-get clean
 EOF
