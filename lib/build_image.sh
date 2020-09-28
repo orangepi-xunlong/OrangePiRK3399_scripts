@@ -2,7 +2,7 @@
 
 build_rk_image()
 {
-	VER="v1.3"
+	VER="v1.4"
 	IMAGENAME="OrangePi_${BOARD}_${OS}_${DISTRO}_${IMAGETYPE}_${KERNEL_NAME}_${VER}"
 	IMAGE="$BUILD/images/$IMAGENAME.img"
 

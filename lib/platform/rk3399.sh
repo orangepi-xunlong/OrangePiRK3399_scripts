@@ -101,6 +101,7 @@ install_gpu_lib()
 	cat > "$DEST/type-phase" <<EOF
 #!/bin/bash
 
+apt-get update
 mkdir /tmp/libmali -p
 dpkg -X /packages/libmali/libmali-rk-midgard-t86x-r14p0_1.6-2_arm64.deb /tmp/libmali
 cp /tmp/libmali/usr/lib/aarch64-linux-gnu/lib* /usr/lib/aarch64-linux-gnu/ -rfa
@@ -156,7 +157,6 @@ make
 make install
 cd -
 
-
 # install  xorg-macros 1.12
 # wget https://www.x.org/archive/individual/util/util-macros-1.12.0.tar.gz
 tar -xvf util-macros-1.12.0.tar.gz
@@ -165,6 +165,16 @@ cd util-macros-1.12.0
 make
 make install
 cd -
+
+else
+#install orc
+tar -xvf orc-0.4.28.tar.xz
+cd orc-0.4.28
+./autogen.sh --prefix=/usr --disable-gtk-doc
+make
+make install
+cd -
+
 fi
 
 unzip libdrm-rockchip-rockchip-2.4.74.zip
@@ -252,6 +262,8 @@ apt-get install -y libasound2-dev libx11-dev
 
 
 apt-get install -y unzip cmake make
+apt-get install -y librtmp-dev
+
 
 apt-get install -y v4l-utils libjpeg62
 tar xzf /packages/others/gstreamer/glib-2.52.3.tar.gz -C /
@@ -282,6 +294,7 @@ apt-get -y install unzip
 apt-get -y install libxext-dev
 apt-get -y install libjpeg62-dev
 apt-get -y install gdisk
+apt-get -y install librtmp-dev
 
 apt-get -y install libxv-dev libpulse-dev
 apt-get -y install libgl1-mesa-dev libgles2-mesa
